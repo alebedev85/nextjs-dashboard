@@ -22,7 +22,7 @@ const FormSchema = z.object({
 const CreateInvoice = FormSchema.omit({ id: true, date: true }); // схема для валидации при создание нового чека
 
 // Use Zod to update the expected types
-const UpdateInvoice = FormSchema.omit({ id: true, date: true });
+// const UpdateInvoice = FormSchema.omit({ id: true, date: true });
 
 export type State = {
   errors?: {
@@ -58,7 +58,7 @@ export async function createInvoice(prevState: State, formData: FormData) {
       INSERT INTO invoices (customer_id, amount, status, date)
       VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
     `;
-  } catch (error) {
+  } catch {
     return {
       message: "Database Error: Failed to Create Invoice.",
     };
@@ -98,7 +98,7 @@ export async function updateInvoice(
     SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
     WHERE id = ${id}
   `;
-  } catch (error) {
+  } catch {
     return {
       message: "Database Error: Failed to Update Invoice.",
     };
@@ -109,12 +109,12 @@ export async function updateInvoice(
 }
 
 export async function deleteInvoice(id: string) {
-  throw new Error("Failed to Delete Invoice");
+  // throw new Error("Failed to Delete Invoice");
   try {
     await sql`DELETE FROM invoices WHERE id = ${id}`;
     revalidatePath("/dashboard/invoices");
     return { message: "Deleted Invoice." };
-  } catch (error) {
+  } catch {
     return { message: "Database Error: Failed to Delete Invoice." };
   }
 }
